@@ -1,0 +1,45 @@
+@model KENDO_PRACTICE.Models.CustomerModel
+
+<style>
+    .container {
+        width: 50%;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .k-form-group {
+        margin-bottom: 20px;
+    }
+</style>
+
+<section>
+    <div class="container">
+        <h2>Login</h2>
+        <hr />
+        @if(ViewBag.invalid != null)
+        {
+            <div class="alert alert-danger">@ViewBag.invalid</div>
+        }
+        <form asp-action="Login" method="post">
+            <div class="k-form-group">
+                <label for="c_username">Username:</label>
+                <input id="c_username" asp-for="c_username" required class="k-textbox" style="width: 100%" />
+            </div>
+            <div class="k-form-group">
+                <label for="c_password">Password:</label>
+                <input id="c_password" asp-for="c_password" required class="k-textbox" style="width: 100%" type="password" />
+            </div>
+            <button type="submit" class="k-button k-primary">Login</button>
+        </form>
+        <p style="color: blue;">Not an user? <a asp-action="Register">Register</a></p>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(document).ready(() => {
+            $("#c_username").kendoTextBox({ type: "text" });
+            $("#c_password").kendoTextBox({ type: "password" });
+        });
+    </script>
+}

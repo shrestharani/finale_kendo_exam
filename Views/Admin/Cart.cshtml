@@ -1,0 +1,145 @@
+@model List<KENDO_PRACTICE.Models.CartModel>
+<style>
+    /* Adjust spacing between table columns */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th,
+    td {
+        padding: 8px;
+        /* Adjust the padding as needed */
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Add specific widths to table columns */
+    th:nth-child(1),
+    td:nth-child(1) {
+        width: 5%;
+        /* Adjust width for the first column */
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+        width: 40%;
+        /* Adjust width for the second column */
+    }
+
+    th:nth-child(3),
+    td:nth-child(3) {
+        width: 10%;
+        /* Adjust width for the third column */
+    }
+
+    th:nth-child(4),
+    td:nth-child(4) {
+        width: 15%;
+        /* Adjust width for the fourth column */
+    }
+
+    th:nth-child(5),
+    td:nth-child(5) {
+        width: 15%;
+        /* Adjust width for the fifth column */
+    }
+
+    /* Add more nth-child rules for additional columns */
+</style>
+<table class="k-table">
+    <thead>
+        <tr>
+            <th>Album</th>
+            <th></th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Actions</th> <!-- Add a new column for actions -->
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <img src="../images/@item.c_album_art" alt="" height="50px" width="50px">
+                </td>
+                <td>@item.c_title</td>
+                <td>@item.c_price</td>
+                <td>
+                    <input class="k-textbox quantity" value="@item.c_quantity" style="width: 100%;" />
+                </td>
+                <td>
+                    <a class="k-button k-primary" href="/Admin/RemoveFromCart?id=@item.c_id">Remove</a>
+                    <!-- Link to remove action -->
+                </td>
+                <td class="total">@item.c_total</td>
+            </tr>
+        }
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+                Grand Total: <strong class="grand-total">@Model.Sum(x => Convert.ToDecimal(x.c_total))</strong>
+            </td>
+
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+                <button class="k-button k-primary" id="checkout">Checkout</button>
+            </td>
+
+        </tr>
+    </tbody>
+</table>
+@section Scripts {
+    <script>
+        $(".quantity").kendoNumericTextBox({
+            change: function () {
+                var grandTotal = 0; // Reset the grand total
+                $(".quantity").each(function () {
+                    debugger;
+                    var quantity = $(this).val();
+                    var price = parseFloat($(this).closest('tr').find('td:nth-child(3)').text()); // Get the price for the current item
+                    var total = price * quantity;
+                    $(this).closest('tr').find('td:nth-child(6)').text(total.toFixed(2)); // Update the total for the current item
+                });
+
+                // Update the grand total every 100 milliseconds
+                setInterval(function () {
+                    grandTotal = 0;
+                    $(".total").each(function () {
+                        grandTotal += parseFloat($(this).text());
+                    });
+                    $("strong.grand-total").text(grandTotal.toFixed(2)); // Update the grand total
+                }, 100);
+            }
+        });
+
+        $("#checkout").click(function () {
+            var total = $("strong.grand-total").text();
+
+            $.ajax({
+                url: "/Admin/CheckOut",
+                type: "POST",
+                data: { total: total},
+               
+                success: function (response) {
+                  
+                        alert("Checkout successful");
+                        window.location.href = "/Admin/CheckOutDetails";
+                  
+                }
+            });
+        });
+    </script>
+}

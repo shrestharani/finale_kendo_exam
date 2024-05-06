@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2021.2.616/styles/kendo.common.min.css" />
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2021.2.616/styles/kendo.metroblack.min.css" />
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.all.min.js"></script>
+    <title>Choose Quantity</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .center {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .auto {
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .k-button {
+            margin: 5px;
+        }
+
+        .contests-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            /* Center the content horizontally */
+        }
+
+        .contest-card-wrapper {
+            width: 230px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .contest-card-wrapper h3 {
+            margin-top: 5px;
+            font-size: 18px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            width: 90%;
+            text-align: center;
+        }
+
+        .contest-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .contest-rating {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        #quantity {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        #price {
+            font-weight: bold;
+        }
+
+        hr {
+            margin: 10px 0;
+            border: none;
+            border-top: 1px solid #ccc;
+        }
+
+        .submit-button {
+            margin-top: 10px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="example" class="center">
+        <a class="k-button k-primary" href="/Customer/Logout" id="pieButton">Logout</a>
+        <a class="k-button k-primary" href="/Admin/Chart">View Sales Chart</a>
+        <div class="demo-section auto">
+            <div id="pager"></div> <!-- Moved pager to the top -->
+            <div class="contests-wrapper">
+            </div>
+        </div>
+    </div>
+    @section Scripts {
+
+        <script id="template" type="text/x-kendo-template">
+        <section class="contest-card-wrapper">
+            <h3>#= c_title #</h3>
+            <img onclick="openDialog('#= c_id #','#= c_title #', '#= c_price #','#= c_album #')" class="contest-image" src='../images/#= c_album #' />
+            <span class="contest-rating"> #= c_price # ₹ </span>
+            <button class="join-button k-button k-button-solid-primary k-button-solid k-button-md k-rounded-md" onclick="openDialog('#= c_id #','#= c_title #', '#= c_price #','#= c_album #')">Add To Cart</button>
+        </section>
+    </script>
+
+
+        <script>
+            var dialog;
+
+            function submitForm(c_id, title, price) {
+                console.log(c_id);
+                var quantity = $("#quantity").val();
+
+                Swal.fire({
+                    title: 'Thank you for your selection!',
+                    html: `<b>Item:</b> ${title}<br><b>Quantity:</b> ${quantity}<br><b>Total Price:</b> ₹${(parseFloat(price) * quantity).toFixed(2)}`,
+                    icon: 'success'
+                }).then((result) => {
+                    if (result.isConfirmed) { // Check if the user clicked "OK"
+                        $.ajax({
+                            url: "https://localhost:7006/Admin/AddToCart",
+                            type: "POST",
+                            data: {
+                                c_id: c_id,
+                                c_price: price,
+                                c_quantity: quantity,
+                                c_total: (parseFloat(price) * quantity).toFixed(2)
+                            },
+                            success: function (data) {
+                                console.log(data);
+                                window.location.href = "https://localhost:7006/Admin/Cart";
+                            }
+                        });
+                    }
+                });
+
+                dialog.close(); // Assuming dialog is defined elsewhere
+            }
+
+            function openDialog(c_id, title, price, imageUrl) {
+                console.log(c_id);
+                var dialogContent =
+                    `<div style="display: flex;">
+                            <div style="flex: 1;">
+                                <img src='../images/${imageUrl}' style='max-width: 100px; max-height: 100px;' />
+                            </div>
+                            <div style="flex: 1; padding-left: 10px;">
+                                <div>Price: ${price}</div>
+                                <label for="quantity">Quantity:</label>
+                                <input id="quantity" style="width: 100%;" />
+                                <hr/>
+                                Total:<div id="price">${price}</div>
+                                <button class="k-button k-primary" style="margin-top: 10px;" onclick="submitForm('${c_id}','${title}', '${price}')">Submit</button>
+                            </div>
+                        </div>`;
+
+                dialog.content(dialogContent);
+                dialog.title("Choose Quantity for " + title + " - Price: " + price);
+
+                $("#quantity").kendoNumericTextBox({
+                    value: 1,
+                    change: function () {
+                        var quantity = this.value();
+                        var total = parseFloat(price) * quantity;
+                        $("#price").text(total.toFixed(2));
+                    }
+                });
+
+                dialog.open();
+            }
+
+            $(document).ready(function () {
+                dialog = $("#dialog").kendoDialog({
+                    width: "400px",
+                    visible: false,
+                    title: "Choose Quantity",
+                    modal: true
+                }).data("kendoDialog");
+
+                var template = kendo.template($("#template").html());
+
+                var dataSource = new kendo.data.DataSource({
+                    transport: {
+                        read: {
+                            url: "https://localhost:7006/Admin/GetAllAlbums",
+                            dataType: "json"
+                        }
+                    },
+                    pageSize: 15,
+                    change: function () {
+                        $(".contests-wrapper").html(kendo.render(template, this.view()));
+                    }
+                });
+
+                $("#pager").kendoPager({
+                    dataSource: dataSource
+                });
+
+                dataSource.read();
+            });
+        </script>
+
+    }
+
+    <div id="dialog"></div>
+
+</body>
+
+</html>

@@ -1,0 +1,168 @@
+@model List<KENDO_PRACTICE.Models.AlbumModel>
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2021.2.616/styles/kendo.common.min.css" />
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2021.2.616/styles/kendo.metroblack.min.css" />
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.all.min.js"></script>
+<script src="https://unpkg.com/jszip/dist/jszip.min.js"></script>
+<button id="deleteSelected">Delete selected</button>
+<div id="grid"></div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+           var dataSource  =new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: "https://localhost:7006/Admin/GetAllAlbums",
+                        dataType: "json"
+                    },
+                    create: {
+                        url: "https://localhost:7006/Admin/Create",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    update: {
+                        url: "https://localhost:7006/Admin/Update",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    destroy:{
+                        url: function(data){
+                            return "https://localhost:7006/Admin/Delete" + data.c_id;
+                        },
+                        type: "DELETE",
+                    }
+                },
+                pageSize: 10,
+                schema: {
+                    model: {
+                        id: "c_id",
+                        fields: {
+                            c_id: {type: "number", editable: false, nullable: true},
+                            image: { type: "file", validation: { required: true } },
+                            c_album: {type: "string", validation: { required: true}},
+                            c_genre: {type: "string",  validation: { required: true}},
+                            c_artist: {type: "string",  validation: { required: true}},
+                            c_title: {type: "string", validation: { required: true}},
+                            c_price: {type: "string",  validation: { required: true}},
+                        }
+                    }
+                }
+            });
+
+            $("#grid").kendoGrid({
+                dataSource: dataSource,
+                pageable: true,
+                sortable: true,
+                filterable: true,
+                height: 550,
+               
+                columns: [
+                   { selectable: true, width: "50px" },
+                    { field: "c_id", title: "ID", width: "50px" },
+                     {
+                        field: "image",
+                        title: "Photo",
+                        hidden: true,
+                        editor: function (container, options) {
+                            $('  <input name="image" id="files" type="file" aria-label="files" />').appendTo(container).kendoUpload({
+                                async: {
+                                    saveUrl: "/Admin/UploadPhoto",
+                                    autoUpload: true
+                                },
+                            });
+                        }
+                    },
+                    
+                    {
+                        field: "c_album",
+                        title: "Album Art",
+                        editor: function (container, options) {
+                            container.hide();
+                            container.prev().hide();
+                        },
+                        template: "<img src='/images/#= c_album #' alt='Album Art' style='max-width: 100px; max-height: 100px;'/>"
+                    },
+                    {
+                        field: "c_genre", 
+                        title: "Genre", 
+                        width: "100px",
+                        editor: function(container, options) {
+                            $('<input required name="' + options.field + '"/>')
+                                .appendTo(container)
+                                .kendoDropDownList({
+                                    autoBind: true,
+                                    dataTextField: "text",
+                                    dataValueField: "value",
+                                    dataSource: [
+                                        { text: "Electronic", value: "Electronic" },
+                                        { text: "Rock", value: "Rock" },
+                                        { text: "Classical", value: "Classical" },
+                                        { text: "Metallica", value: "Metallica" }
+                                    ]
+                                });
+                        }
+                    },
+                    { field: "c_artist", title: "Artist", width: "100px" },
+                    { field: "c_title", title: "Title", width: "100px" },
+                    { field: "c_price", title: "Price", width: "100px" },
+                    
+                    { command: ["edit", "destroy"], title: "&nbsp;", width: "250px" }
+                ],
+                editable: "popup",
+                     pdf: {
+            allPages: true,
+            avoidLinks: true,
+            paperSize: "A4",
+            margin: { top: "2cm", left: "1cm", right: "1cm", bottom: "1cm" },
+            landscape: true,
+            repeatHeaders: true,
+            template: $("#page-template").html(),
+            scale: 0.8
+        },
+        excel: {
+            fileName: "Kendo UI Grid Export.xlsx"
+        },
+        toolbar: ["create", "search", "pdf", "excel","delete"]
+                
+            });
+            dataSource.bind("requestEnd", function (e) {
+                if (e.type === "create" || e.type === "update" || e.type === "destroy") {
+                    dataSource.read();
+                }
+            });
+             $("#deleteSelected").kendoButton().click(function() {
+            var grid = $("#grid").data("kendoGrid");
+            var selectedItems = grid.select();
+            var selectedDataItems = [];
+            selectedItems.each(function(index, row) {
+                var dataItem = grid.dataItem(row);
+                selectedDataItems.push(dataItem);
+            });
+
+            if (selectedDataItems.length > 0) {
+                if (confirm("Are you sure you want to delete the selected rows?")) {
+                    $.each(selectedDataItems, function(index, dataItem) {
+                        dataSource.remove(dataItem);
+                    });
+                    dataSource.sync();
+                }
+            } else {
+                alert("Please select at least one row to delete.");
+            }
+        });
+
+            
+
+
+            $("#grid").on("click", ".k-grid-cancel-changes", function () {
+                dataSource.cancelChanges();
+            });
+
+                      
+        })
+    </script>
+
+}

@@ -1,0 +1,94 @@
+{
+  "format": 1,
+  "restore": {
+    "F:\\fy syllabus M.Sc.I.T\\Office Material\\Training_ASSIGMENTS\\Kendo_PRACTICE_ALL\\KENDO_PRACTICE\\KENDO_PRACTICE.csproj": {}
+  },
+  "projects": {
+    "F:\\fy syllabus M.Sc.I.T\\Office Material\\Training_ASSIGMENTS\\Kendo_PRACTICE_ALL\\KENDO_PRACTICE\\KENDO_PRACTICE.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "F:\\fy syllabus M.Sc.I.T\\Office Material\\Training_ASSIGMENTS\\Kendo_PRACTICE_ALL\\KENDO_PRACTICE\\KENDO_PRACTICE.csproj",
+        "projectName": "KENDO_PRACTICE",
+        "projectPath": "F:\\fy syllabus M.Sc.I.T\\Office Material\\Training_ASSIGMENTS\\Kendo_PRACTICE_ALL\\KENDO_PRACTICE\\KENDO_PRACTICE.csproj",
+        "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
+        "outputPath": "F:\\fy syllabus M.Sc.I.T\\Office Material\\Training_ASSIGMENTS\\Kendo_PRACTICE_ALL\\KENDO_PRACTICE\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Http": {
+              "target": "Package",
+              "version": "[2.2.2, )"
+            },
+            "Microsoft.AspNetCore.Http.Abstractions": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Session": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.Windows.Compatibility": {
+              "target": "Package",
+              "version": "[5.0.2, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "ReCaptcha.AspNetCore": {
+              "target": "Package",
+              "version": "[3.0.10, )"
+            },
+            "npgsql": {
+              "target": "Package",
+              "version": "[8.0.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.420\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

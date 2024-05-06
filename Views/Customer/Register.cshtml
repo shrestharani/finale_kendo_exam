@@ -1,0 +1,62 @@
+@model KENDO_PRACTICE.Models.CustomerModel
+
+<style>
+    .container {
+        width: 50%;
+        padding: 20px;
+    }
+
+    .k-form-group {
+        margin-bottom: 20px;
+    }
+</style>
+
+<section>
+    <div class="container">
+        <h2>Register</h2>
+        <hr />
+        @if (ViewBag.username != null)
+        {
+            <div class="alert alert-danger">@ViewBag.username</div>
+        }
+        @if (ViewBag.email != null)
+        {
+            <div class="alert alert-danger">@ViewBag.email</div>
+        }
+        @if (ViewBag.pass != null)
+        {
+            <div class="alert alert-danger">@ViewBag.pass</div>
+        }
+        <form asp-action="Register" method="post">
+            <div class="k-form-group">
+                <label for="c_username">Username:</label>
+                <input id="c_username" asp-for="c_username" required class="k-textbox" style="width: 100%" />
+            </div>
+            <div class="k-form-group">
+                <label for="c_email">Email:</label>
+                <input id="c_email" asp-for="c_email" required class="k-textbox" style="width: 100%" type="email" />
+            </div>
+            <div class="k-form-group">
+                <label for="c_password">Password:</label>
+                <input id="c_password" asp-for="c_password" required class="k-textbox" style="width: 100%" type="password" />
+            </div>
+            <div class="k-form-group">
+                <label for="ConfirmPassword">Confirm Password:</label>
+                <input id="ConfirmPassword" asp-for="ConfirmPassword" required class="k-textbox" style="width: 100%" type="password" />
+            </div>
+            <button type="submit" class="k-button k-primary">Register</button>
+        </form>
+        <p style="color: blue;">Already an user? <a asp-action="Login">Login</a></p>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(document).ready(() => {
+            $("#c_username").kendoTextBox();
+            $("#c_email").kendoTextBox({ type: "email" });
+            $("#c_password").kendoTextBox({ type: "password" });
+            $("#ConfirmPassword").kendoTextBox({ type: "password" });
+        });
+    </script>
+}

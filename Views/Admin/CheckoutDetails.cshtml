@@ -1,0 +1,107 @@
+@model KENDO_PRACTICE.Models.CheckoutModel;
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+
+<form method="POST" action="CheckoutDetails" class="k-form">
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Customer Details</h2>
+            <div class="form-group">
+                <label for="c_firstname">First Name:</label>
+                <input id="c_firstname" name="c_firstname" required style="width: 100%" asp-for="c_firstname"
+                    class="k-textbox" />
+            </div>
+            <div class="form-group">
+                <label for="c_lastname">Last Name:</label>
+                <input id="c_lastname" name="c_lastname" required style="width: 100%" asp-for="c_lastname"
+                    class="k-textbox" />
+            </div>
+            <div class="form-group">
+                <label for="c_address">Address:</label>
+                <input id="c_address" name="c_address" required style="width: 100%" asp-for="c_address"
+                    class="k-textbox" />
+            </div>
+            <div class="form-group">
+                <label for="c_city">City:</label>
+                <input id="c_city" name="c_city" required style="width: 100%" asp-for="c_city" class="k-textbox" />
+            </div>
+            <div class="form-group">
+                <label for="c_state">State:</label>
+                <input id="c_state" name="c_state" required style="width: 100%" asp-for="c_state" class="k-textbox" />
+            </div>
+            <div class="form-group">
+                <label for="c_postal_code">Postal Code:</label>
+                <input id="c_postal_code" name="c_postal_code" required style="width: 100%" asp-for="c_postal_code"
+                    class="k-textbox" />
+            </div>
+            <div class="form-group">
+                <label for="c_country">Country:</label>
+                <input id="c_country" name="c_country" required style="width: 100%" asp-for="c_country"
+                    class="k-textbox" />
+            </div>
+            <div class="form-group">
+                <label for="c_phone">Phone:</label>
+                <input id="c_phone" name="c_phone" required style="width: 100%" asp-for="c_phone" class="k-textbox" />
+            </div>
+            <div class="form-group">
+                <label for="c_email_address">Email Address:</label>
+                <input id="c_email_address" name="c_email_address" required style="width: 100%"
+                    asp-for="c_email_address" class="k-textbox" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h2>Shipping Details</h2>
+            <div class="form-group">
+                <label for="c_shipping_priority">Shipping Priority:</label>
+                <input id="c_shipping_priority" name="c_shipping_priority" style="width: 100%"
+                    asp-for="c_shipping_priority" class="k-textbox" required />
+            </div>
+            <div class="form-group mt-5">
+                <div>
+                    <label for="dob">Date of Birth:</label>
+                </div>
+                <input hidden id="c_shipping_date" name="c_shipping_date" asp-for="c_shipping_date" type="text"
+                    class="kendo-datepicker" placeholder="Date of Birth">
+                <div id="calendar"></div>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="k-button k-primary">Create</button>
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(".k-textbox").kendoTextBox();
+
+             var today = new Date();
+            today.setHours(0, 0, 0, 0); // set the time to 00:00:00
+
+            var calendar = $("#calendar").kendoCalendar({
+                min: today, // set the minimum date
+                change: function () {
+                    var value = this.value();
+                    console.log(value);
+                    $("#c_shipping_date").val(kendo.toString(value, 'yyyy-MM-dd'));
+                }
+            }).data("kendoCalendar");
+
+            $("#c_shipping_priority").kendoDropDownList({
+                dataTextField: "c_name",
+                dataValueField: "c_name",
+                dataSource: {
+                    data: [
+                        { c_id: 1, c_name: "Regular" },
+                        { c_id: 2, c_name: "Express" },
+                        { c_id: 3, c_name: "Next-day" },
+                        { c_id: 4, c_name: "Two-day" }
+                    ]
+                },
+            });
+        });
+    </script>
+}
