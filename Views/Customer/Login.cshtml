@@ -1,5 +1,9 @@
 @model KENDO_PRACTICE.Models.CustomerModel
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2021.2.616/styles/kendo.common.min.css" />
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2021.2.616/styles/kendo.default.min.css" />
+<script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.all.min.js"></script>
 <style>
     .container {
         width: 50%;
@@ -14,8 +18,8 @@
 
 <section>
     <div class="container">
-        <h2>Login</h2>
-        <hr />
+        <h2 style="text-align: center;">Login</h2>
+        
         @if(ViewBag.invalid != null)
         {
             <div class="alert alert-danger">@ViewBag.invalid</div>
@@ -29,9 +33,10 @@
                 <label for="c_password">Password:</label>
                 <input id="c_password" asp-for="c_password" required class="k-textbox" style="width: 100%" type="password" />
             </div>
-            <button type="submit" class="k-button k-primary">Login</button>
+            <button type="submit"  class="k-button k-primary" style="width: 100%">Login</button>
         </form>
-        <p style="color: blue;">Not an user? <a asp-action="Register">Register</a></p>
+        <br>
+        <p style="color: black; text-align:center">Not an user? <a asp-action="Register" style="color: black; text-decoration:none">Register</a></p>
     </div>
 </section>
 

@@ -1,5 +1,8 @@
 @model KENDO_PRACTICE.Models.CustomerModel
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2021.2.616/styles/kendo.common.min.css" />
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2021.2.616/styles/kendo.default.min.css" />
+<script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.all.min.js"></script>
 <style>
     .container {
         width: 50%;
@@ -9,12 +12,13 @@
     .k-form-group {
         margin-bottom: 20px;
     }
+    
 </style>
 
 <section>
     <div class="container">
-        <h2>Register</h2>
-        <hr />
+        <h2 style="text-align:center">Register</h2>
+        
         @if (ViewBag.username != null)
         {
             <div class="alert alert-danger">@ViewBag.username</div>
@@ -27,6 +31,9 @@
         {
             <div class="alert alert-danger">@ViewBag.pass</div>
         }
+        <div class="container">
+            
+        </div>
         <form asp-action="Register" method="post">
             <div class="k-form-group">
                 <label for="c_username">Username:</label>
@@ -44,9 +51,12 @@
                 <label for="ConfirmPassword">Confirm Password:</label>
                 <input id="ConfirmPassword" asp-for="ConfirmPassword" required class="k-textbox" style="width: 100%" type="password" />
             </div>
-            <button type="submit" class="k-button k-primary">Register</button>
+            <div class="k-form-group">
+                <button type="submit" class="k-button k-primary" style="width: 100%" >Register</button>
+            </div>
         </form>
-        <p style="color: blue;">Already an user? <a asp-action="Login">Login</a></p>
+        <br>
+        <p style="color: black; text-align: center;">Already an user? <a asp-action="Login" style="color: black; text-decoration:none">Login</a></p>
     </div>
 </section>
 
